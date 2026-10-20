@@ -1,3 +1,9 @@
+import os
+import sys
+
+# Add parent directory to path to import model_api modules
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from model_api.device_utils import get_torch_device, describe_device
 import torch
 from transformers import DistilBertTokenizer, DistilBertModel
 from transformers import BartForConditionalGeneration, BartTokenizer
@@ -5,11 +11,6 @@ import re
 import numpy as np
 from typing import Dict, List, Any, Union, Tuple
 from datetime import datetime
-import os
-import sys
-
-# Add parent directory to path to import logging_scripts
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from model_api.logging_scripts import create_log_file, append_to_log
 
 # Initialize log file
@@ -25,10 +26,10 @@ def log_message(message):
 
 class DistilBertProcessor:
     def __init__(self):
-        """Initialize DistilBERT model with CUDA if available."""
+        """Initialize DistilBERT model on the best available device (CUDA, MPS or CPU)."""
         log_message("Initializing DistilBERT model")
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        log_message(f"Using device: {self.device}")
+        self.device = get_torch_device()
+        log_message(f"Using device: {describe_device(self.device)}")
         
         # Load tokenizer and model
         try:
@@ -460,8 +461,8 @@ def summary_for_results(categorized_data: Dict[str, Dict[str, Dict[str, Union[Li
     
     try:
         # Initialize BART model for summarization
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        log_message(f"Loading BART model on {device}")
+        device = get_torch_device()
+        log_message(f"Loading BART model on {describe_device(device)}")
         
         try:
             model_name = "facebook/bart-large-cnn"
@@ -672,8 +673,8 @@ def overall_summary(data: Dict[str, Dict[str, List[Dict[str, str]]]]) -> str:
     
     try:
         # Initialize BART model for summarization
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        log_message(f"Loading BART model on {device}")
+        device = get_torch_device()
+        log_message(f"Loading BART model on {describe_device(device)}")
         
         try:
             model_name = "facebook/bart-large-cnn"

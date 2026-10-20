@@ -1,3 +1,6 @@
+# PyTorch: macOS gets the standard build (Apple GPU via MPS); Windows/Linux get the
+# CUDA 12.1 build (NVIDIA GPU). The extra index is where the +cu121 builds live.
+--extra-index-url https://download.pytorch.org/whl/cu121
 annotated-types==0.7.0
 anthropic==0.45.1
 anyio==4.6.0
@@ -29,11 +32,11 @@ grpcio-status==1.70.0
 h11==0.14.0
 httpcore==1.0.5
 httplib2==0.22.0
-httpx==0.27.2
+httpx==0.28.1
 idna==3.10
 jiter==0.5.0
 jwt==1.3.1
-openai==1.50.2
+openai==1.58.1
 pillow==11.1.0
 proto-plus==1.26.0
 protobuf==5.29.3
@@ -57,3 +60,11 @@ tzdata==2024.2
 uritemplate==4.1.1
 urllib3==2.3.0
 websockets==14.2
+# Used by the pipeline scripts but previously missing
+schedule==1.2.2
+fake-useragent==2.0.3
+google-cloud-storage==2.19.0
+numpy==2.2.3
+torch==2.5.1 ; sys_platform == "darwin"
+torch==2.5.1+cu121 ; sys_platform != "darwin"
+transformers==4.49.0
